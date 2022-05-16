@@ -9,7 +9,7 @@ import yaml
 from typing import List
 
 VERSION = "0.0.1"
-CONFIG_LOCATION = "~/"
+CONFIG_LOCATION = f"/home/{os.environ['USER']}/"
 
 
 def run_command(command: List[str], process_name: str, standard_name: str) -> bool:
@@ -167,20 +167,18 @@ def attach_sdk(argv: List[str]) -> None:
       return
    else:
       path = argv[0]
-      absoluted = False
 
-      if path[0] != "/" and path[:1] != "~/":
-         # path is relative, so make it absolute
-         path = os.path.curdir + path
-         absoluted = True
       if not os.path.isdir(path):
-         print(f"Could not find supplied path '{path}'{' (note that the path supplied was relative, so has been made absolute)' if absoluted else ''}")
+         print(f"Invalid path supplied: '{path}'")
          return
 
       # TODO: add a check to make sure the path points to a Pico SDK
-
-      with open(CONFIG_LOCATION + ".picotools", "r") as f:
+      config = None
+      try:
+         f = open(CONFIG_LOCATION + ".picotools", "r")
          config = yaml.load(f.read(), Loader=yaml.CLoader)
+      except FileNotFoundError:
+         pass
       if config is None:
          config = {}
       config["pico-sdk"] = path
