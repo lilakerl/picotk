@@ -1,4 +1,4 @@
 #!/usr/bin/bash
 
-cp ./picotools.py /usr/bin/picotools
-chmod +x /usr/bin/picotools
+cp ./picotk.py /usr/bin/picotk
+chmod +x /usr/bin/picotk
